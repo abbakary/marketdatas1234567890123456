@@ -56,21 +56,26 @@ export default function ProjectPage() {
   const [projects, setProjects] = useState(projectDatasets);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form, setForm] = useState({
+    // Project Identity
     title: "",
-    author: "Me", 
-    category: "",
-    projectType: "New Dataset Creation",
-    status: "Seeking Collaborators",
-    fundingGoal: "",
-    revenueShare: "",
-    monetization: "Passive Licensing",
-    tags: "",
     description: "",
-    image: "",
-    imageName: "",
-    expertise: "Data Scientist",
-    timeline: "1-3 Months",
-    outcome: "Commercial Product",
+    category: "",
+    dataType: "CSV",
+    datasetSize: "1-10GB",
+
+    // Budget & Timeline
+    budgetMin: "",
+    budgetMax: "",
+    deadline: "",
+
+    // Collaboration
+    preferredCollaborator: "",
+    openToSuggestions: true,
+
+    // Priority & Requirements
+    priorityLevel: "Medium",
+    sourcePreference: "",
+    attachmentUrl: "",
   });
 
   const [imageType, setImageType] = useState("url"); 
@@ -141,19 +146,18 @@ export default function ProjectPage() {
     setIsModalOpen(false);
     setForm({
       title: "",
-      author: "Me",
-      category: "",
-      projectType: "New Dataset Creation",
-      status: "Seeking Collaborators",
-      fundingGoal: "",
-      revenueShare: "",
-      monetization: "Passive Licensing",
-      tags: "",
       description: "",
-      image: "",
-      expertise: "Data Scientist",
-      timeline: "1-3 Months",
-      outcome: "Commercial Product",
+      category: "",
+      dataType: "CSV",
+      datasetSize: "1-10GB",
+      budgetMin: "",
+      budgetMax: "",
+      deadline: "",
+      preferredCollaborator: "",
+      openToSuggestions: true,
+      priorityLevel: "Medium",
+      sourcePreference: "",
+      attachmentUrl: "",
     });
   };
 
@@ -161,26 +165,32 @@ export default function ProjectPage() {
      setForm({ ...form, [field]: e.target.value });
    };
  
-   const handleSubmit = () => {
-     if (!form.title || !form.category) return;
-     const newProject = {
+   const handleSubmit = async () => {
+     if (!form.title || !form.category || !form.budgetMin || !form.budgetMax || !form.deadline) {
+       alert("Please fill in all required fields");
+       return;
+     }
+
+     // In production, this would call the API
+     // For now, we'll store it in local state or sessionStorage
+     const newRequest = {
+       id: `pr_${Date.now()}`,
        ...form,
-       id: projects.length + 1,
-       tags: form.tags ? form.tags.split(",").map(t => t.trim()).filter(t => t !== "") : [],
-       updated: "Just now",
-       files: "0 Files",
-       size: "0 MB",
-       downloads: "0 downloads",
-       votes: 0,
-       contributors: 1,
-       forks: 0,
-       stars: 0,
-       progress: 0,
-       avatars: ["https://i.pravatar.cc/40?img=1"],
-       image: form.image || "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=900&q=80",
+       buyerId: localStorage.getItem('dali-user') ? JSON.parse(localStorage.getItem('dali-user')).id : '4',
+       buyerName: localStorage.getItem('dali-user') ? JSON.parse(localStorage.getItem('dali-user')).name : 'You',
+       status: 'PENDING',
+       createdAt: new Date(),
+       bids: [],
      };
-     setProjects([newProject, ...projects]);
+
+     // Save to sessionStorage for demo
+     const existingRequests = JSON.parse(sessionStorage.getItem('projectRequests') || '[]');
+     existingRequests.push(newRequest);
+     sessionStorage.setItem('projectRequests', JSON.stringify(existingRequests));
+
+     alert('Request created successfully! Redirecting to buyer dashboard...');
      handleCloseModal();
+     navigate('/dashboard/buyer/requests');
    };
 
    const handleVote = (id, e) => {
@@ -319,8 +329,8 @@ export default function ProjectPage() {
                       <Plus size={20} color={PRIMARY} />
                     </Box>
                     <Box>
-                      <Typography sx={{ fontSize: "1.1rem", fontWeight: 800, color: "#111827" }}>List Your Project</Typography>
-                      <Typography sx={{ fontSize: "0.75rem", color: "#6b7280" }}>Offer your project for collaboration or investment</Typography>
+                      <Typography sx={{ fontSize: "1.1rem", fontWeight: 800, color: "#111827" }}>Request Collaborator Project</Typography>
+                      <Typography sx={{ fontSize: "0.75rem", color: "#6b7280" }}>Create a structured order for your dataset/project needs</Typography>
                     </Box>
                   </Box>
                   <IconButton onClick={handleCloseModal} size="small" sx={{ color: "#9ca3af", "&:hover": { color: "#111827", backgroundColor: "#f3f4f6" } }}>
@@ -329,135 +339,179 @@ export default function ProjectPage() {
                 </Box>
 
                   <Box sx={{ p: 3, overflowY: "auto", flex: 1 }}>
-                    <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" }, gap: 4 }}>
-                      {/* Section 1: Project Identity & Strategy */}
-                      <Box sx={{ display: "flex", flexDirection: "column", gap: 2.5 }}>
-                        <Typography sx={{ fontSize: "0.95rem", fontWeight: 800, color: PRIMARY, mb: -1, borderBottom: `1px solid ${PRIMARY}20`, pb: 1 }}>
-                          Project Identity
-                        </Typography>
-                        
+                    {/* Section 1: Core Request Information */}
+                    <Box sx={{ mb: 3.5 }}>
+                      <Typography sx={{ fontSize: "0.95rem", fontWeight: 800, color: PRIMARY, mb: 2.5, borderBottom: `2px solid ${PRIMARY}`, pb: 1 }}>
+                        📝 Core Requirements
+                      </Typography>
+                      <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" }, gap: 2.5 }}>
                         <Box>
-                          <Typography sx={{ fontSize: "0.85rem", fontWeight: 700, color: "#374151", mb: 1, display: "flex", alignItems: "center", gap: 1 }}>
-                            <Info size={14} /> Project Title
+                          <Typography sx={{ fontSize: "0.85rem", fontWeight: 700, color: "#374151", mb: 0.8 }}>
+                            Project Title *
                           </Typography>
-                          <TextField fullWidth label="Title" placeholder="e.g. Healthcare Claims Intelligence" value={form.title} onChange={handleInputChange("title")} required
+                          <TextField fullWidth placeholder="e.g. Healthcare Claims Intelligence Dataset" value={form.title} onChange={handleInputChange("title")} required
                             sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }} />
                         </Box>
 
                         <Box>
-                          <Typography sx={{ fontSize: "0.85rem", fontWeight: 700, color: "#374151", mb: 1, display: "flex", alignItems: "center", gap: 1 }}>
-                            <Tag size={14} /> Domain Category
+                          <Typography sx={{ fontSize: "0.85rem", fontWeight: 700, color: "#374151", mb: 0.8 }}>
+                            Category *
                           </Typography>
-                          <TextField fullWidth select label="Category" value={form.category} onChange={handleInputChange("category")} required
+                          <TextField fullWidth select value={form.category} onChange={handleInputChange("category")} required
                             sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }}>
                             {categories.filter(c => c !== "All").map(cat => (
                               <MenuItem key={cat} value={cat}>{cat}</MenuItem>
                             ))}
                           </TextField>
                         </Box>
-
-                        <Box>
-                          <Typography sx={{ fontSize: "0.85rem", fontWeight: 700, color: "#374151", mb: 1, display: "flex", alignItems: "center", gap: 1 }}>
-                            <FolderOpen size={14} /> Project Nature
-                          </Typography>
-                          <TextField fullWidth select label="Project Type" value={form.projectType} onChange={handleInputChange("projectType")}
-                            sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }}>
-                            <MenuItem value="New Dataset Creation">New Dataset Creation</MenuItem>
-                            <MenuItem value="Data Cleaning & Refinement">Data Cleaning & Refinement</MenuItem>
-                            <MenuItem value="Metadata Enrichment">Metadata Enrichment</MenuItem>
-                            <MenuItem value="Dataset Labelling">Dataset Labelling</MenuItem>
-                            <MenuItem value="AI Training Set Prep">AI Training Set Preparation</MenuItem>
-                          </TextField>
-                        </Box>
-
-                        <Box>
-                          <Typography sx={{ fontSize: "0.85rem", fontWeight: 700, color: "#374151", mb: 1, display: "flex", alignItems: "center", gap: 1 }}>
-                            <TrendingUp size={14} /> Anticipated Value
-                          </Typography>
-                          <TextField fullWidth select label="Monetization Plan" value={form.monetization} onChange={handleInputChange("monetization")}
-                            sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }}>
-                            <MenuItem value="Passive Licensing">Commercial SaaS/Licensing</MenuItem>
-                            <MenuItem value="Subscription">Premium Subscription</MenuItem>
-                            <MenuItem value="One-time Sale">Bulk/One-time Acquisition</MenuItem>
-                            <MenuItem value="Open Data">Open Data (Grant-funded)</MenuItem>
-                          </TextField>
-                        </Box>
                       </Box>
 
-                      {/* Section 2: Financials & Collaboration */}
-                      <Box sx={{ display: "flex", flexDirection: "column", gap: 2.5 }}>
-                        <Typography sx={{ fontSize: "0.95rem", fontWeight: 800, color: SECONDARY, mb: -1, borderBottom: `1px solid ${SECONDARY}20`, pb: 1 }}>
-                          Investment & Resources
+                      <Box sx={{ mt: 2.5 }}>
+                        <Typography sx={{ fontSize: "0.85rem", fontWeight: 700, color: "#374151", mb: 0.8 }}>
+                          Detailed Description *
                         </Typography>
+                        <TextField fullWidth multiline rows={3} placeholder="Describe your need, technical requirements, use case, and expected outcomes..." value={form.description} onChange={handleInputChange("description")} required
+                          sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }} />
+                      </Box>
+                    </Box>
 
-                        <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2 }}>
-                          <Box>
-                            <Typography sx={{ fontSize: "0.85rem", fontWeight: 700, color: "#374151", mb: 1, display: "flex", alignItems: "center", gap: 1 }}>
-                              <DollarSign size={14} /> Funding Goal
-                            </Typography>
-                            <TextField fullWidth placeholder="$5,000" value={form.fundingGoal} onChange={handleInputChange("fundingGoal")}
-                              sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }} />
-                          </Box>
-                          <Box>
-                            <Typography sx={{ fontSize: "0.85rem", fontWeight: 700, color: "#374151", mb: 1, display: "flex", alignItems: "center", gap: 1 }}>
-                              <TrendingUp size={14} /> Equity %
-                            </Typography>
-                            <TextField fullWidth placeholder="5-10%" value={form.revenueShare} onChange={handleInputChange("revenueShare")}
-                              sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }} />
-                          </Box>
-                        </Box>
-
+                    {/* Section 2: Dataset Specifications */}
+                    <Box sx={{ mb: 3.5 }}>
+                      <Typography sx={{ fontSize: "0.95rem", fontWeight: 800, color: PRIMARY, mb: 2.5, borderBottom: `2px solid ${PRIMARY}`, pb: 1 }}>
+                        📊 Dataset Specifications
+                      </Typography>
+                      <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "1fr 1fr 1fr" }, gap: 2.5 }}>
                         <Box>
-                          <Typography sx={{ fontSize: "0.85rem", fontWeight: 700, color: "#374151", mb: 1, display: "flex", alignItems: "center", gap: 1 }}>
-                            <Users size={14} /> Expertise Needed
+                          <Typography sx={{ fontSize: "0.85rem", fontWeight: 700, color: "#374151", mb: 0.8 }}>
+                            Data Type *
                           </Typography>
-                          <TextField fullWidth select label="Primary Lead Role" value={form.expertise} onChange={handleInputChange("expertise")}
+                          <TextField fullWidth select value={form.dataType} onChange={handleInputChange("dataType")} required
                             sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }}>
-                            <MenuItem value="Data Scientist">Data Scientist / Analyst</MenuItem>
-                            <MenuItem value="Data Engineer">Infrastructure / Pipeline</MenuItem>
-                            <MenuItem value="ML Researcher">AI / ML Researcher</MenuItem>
-                            <MenuItem value="Domain Expert">Domain/Subject Specialist</MenuItem>
-                            <MenuItem value="Legal Expert">Governance & Ethics</MenuItem>
+                            <MenuItem value="CSV">CSV</MenuItem>
+                            <MenuItem value="JSON">JSON</MenuItem>
+                            <MenuItem value="Images">Images</MenuItem>
+                            <MenuItem value="Text">Text/Documents</MenuItem>
+                            <MenuItem value="API">API</MenuItem>
+                            <MenuItem value="Database">Database</MenuItem>
+                            <MenuItem value="Mixed">Mixed Format</MenuItem>
                           </TextField>
                         </Box>
 
                         <Box>
-                          <Typography sx={{ fontSize: "0.85rem", fontWeight: 700, color: "#374151", mb: 1, display: "flex", alignItems: "center", gap: 1 }}>
-                            <Clock size={14} /> Roadmap
+                          <Typography sx={{ fontSize: "0.85rem", fontWeight: 700, color: "#374151", mb: 0.8 }}>
+                            Dataset Size *
                           </Typography>
-                          <TextField fullWidth select label="Execution Timeline" value={form.timeline} onChange={handleInputChange("timeline")}
+                          <TextField fullWidth select value={form.datasetSize} onChange={handleInputChange("datasetSize")} required
                             sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }}>
-                            <MenuItem value="Short-term">Rapid Finish ({'<'} 1 Month)</MenuItem>
-                            <MenuItem value="1-3 Months">Mid-term Build (1-3 Mo)</MenuItem>
-                            <MenuItem value="Long-term">Strategic Initiative (6+ Mo)</MenuItem>
+                            <MenuItem value="<1GB">Less than 1GB</MenuItem>
+                            <MenuItem value="1-10GB">1-10 GB</MenuItem>
+                            <MenuItem value="10-50GB">10-50 GB</MenuItem>
+                            <MenuItem value="50GB+">50GB+</MenuItem>
+                            <MenuItem value="Unknown">Unknown (will determine)</MenuItem>
                           </TextField>
                         </Box>
 
                         <Box>
-                          <Typography sx={{ fontSize: "0.85rem", fontWeight: 700, color: "#374151", mb: 1, display: "flex", alignItems: "center", gap: 1 }}>
-                            <ImageIcon size={14} /> Visual Asset
+                          <Typography sx={{ fontSize: "0.85rem", fontWeight: 700, color: "#374151", mb: 0.8 }}>
+                            Source Preference
                           </Typography>
-                          <TextField fullWidth label="Cover Image URL" placeholder="https://..." value={form.image} onChange={handleInputChange("image")}
+                          <TextField fullWidth placeholder="e.g. Public APIs, Proprietary, Web scraped..." value={form.sourcePreference} onChange={handleInputChange("sourcePreference")}
                             sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }} />
                         </Box>
                       </Box>
                     </Box>
 
-                    <Box sx={{ mt: 3 }}>
-                      <Typography sx={{ fontSize: "0.85rem", fontWeight: 800, color: "#374151", mb: 1.5, display: "flex", alignItems: "center", gap: 1 }}>
-                        <FileText size={16} color={PRIMARY} /> Strategic Mission & Requirements
+                    {/* Section 3: Budget & Timeline */}
+                    <Box sx={{ mb: 3.5 }}>
+                      <Typography sx={{ fontSize: "0.95rem", fontWeight: 800, color: SECONDARY, mb: 2.5, borderBottom: `2px solid ${SECONDARY}`, pb: 1 }}>
+                        💰 Budget & Timeline
                       </Typography>
-                      <TextField fullWidth multiline rows={4} placeholder="Describe the commercial potential, technical hurdles, and exactly what you're looking for..." value={form.description} onChange={handleInputChange("description")}
-                        sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }} />
+                      <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" }, gap: 2.5 }}>
+                        <Box>
+                          <Typography sx={{ fontSize: "0.85rem", fontWeight: 700, color: "#374151", mb: 0.8 }}>
+                            Budget Min (USD) *
+                          </Typography>
+                          <TextField fullWidth placeholder="e.g. 2000" type="number" value={form.budgetMin} onChange={handleInputChange("budgetMin")} required
+                            sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }} />
+                        </Box>
+
+                        <Box>
+                          <Typography sx={{ fontSize: "0.85rem", fontWeight: 700, color: "#374151", mb: 0.8 }}>
+                            Budget Max (USD) *
+                          </Typography>
+                          <TextField fullWidth placeholder="e.g. 5000" type="number" value={form.budgetMax} onChange={handleInputChange("budgetMax")} required
+                            sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }} />
+                        </Box>
+                      </Box>
+
+                      <Box sx={{ mt: 2.5 }}>
+                        <Typography sx={{ fontSize: "0.85rem", fontWeight: 700, color: "#374151", mb: 0.8 }}>
+                          Deadline (Required Completion) *
+                        </Typography>
+                        <TextField fullWidth type="date" value={form.deadline} onChange={handleInputChange("deadline")} required
+                          sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }} />
+                      </Box>
+                    </Box>
+
+                    {/* Section 4: Collaboration Preferences */}
+                    <Box sx={{ mb: 3.5 }}>
+                      <Typography sx={{ fontSize: "0.95rem", fontWeight: 800, color: SECONDARY, mb: 2.5, borderBottom: `2px solid ${SECONDARY}`, pb: 1 }}>
+                        👥 Collaboration Preferences
+                      </Typography>
+
+                      <Box sx={{ mb: 2.5 }}>
+                        <Typography sx={{ fontSize: "0.85rem", fontWeight: 700, color: "#374151", mb: 0.8 }}>
+                          Preferred Collaborator (Optional)
+                        </Typography>
+                        <TextField fullWidth placeholder="Name or ID of preferred collaborator (leave empty to open bids)" value={form.preferredCollaborator} onChange={handleInputChange("preferredCollaborator")}
+                          sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }} />
+                      </Box>
+
+                      <Box sx={{ p: 2, backgroundColor: "#f0fdfa", borderRadius: 2, border: `1px solid ${SECONDARY}20`, display: "flex", gap: 2, alignItems: "center" }}>
+                        <input type="checkbox" checked={form.openToSuggestions} onChange={(e) => setForm({ ...form, openToSuggestions: e.target.checked })} style={{ width: 18, height: 18, cursor: "pointer" }} />
+                        <Box>
+                          <Typography sx={{ fontSize: "0.9rem", fontWeight: 700, color: "#111827" }}>Open to Suggestions</Typography>
+                          <Typography sx={{ fontSize: "0.75rem", color: "#6b7280" }}>If unchecked, only preferred collaborator will receive this request</Typography>
+                        </Box>
+                      </Box>
+                    </Box>
+
+                    {/* Section 5: Priority & Attachments */}
+                    <Box>
+                      <Typography sx={{ fontSize: "0.95rem", fontWeight: 800, color: PRIMARY, mb: 2.5, borderBottom: `2px solid ${PRIMARY}`, pb: 1 }}>
+                        ⚡ Priority & Attachments
+                      </Typography>
+                      <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" }, gap: 2.5 }}>
+                        <Box>
+                          <Typography sx={{ fontSize: "0.85rem", fontWeight: 700, color: "#374151", mb: 0.8 }}>
+                            Priority Level
+                          </Typography>
+                          <TextField fullWidth select value={form.priorityLevel} onChange={handleInputChange("priorityLevel")}
+                            sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }}>
+                            <MenuItem value="Low">Low</MenuItem>
+                            <MenuItem value="Medium">Medium</MenuItem>
+                            <MenuItem value="High">High</MenuItem>
+                            <MenuItem value="Urgent">Urgent</MenuItem>
+                          </TextField>
+                        </Box>
+
+                        <Box>
+                          <Typography sx={{ fontSize: "0.85rem", fontWeight: 700, color: "#374151", mb: 0.8 }}>
+                            Requirements Doc (URL)
+                          </Typography>
+                          <TextField fullWidth placeholder="Link to detailed requirements or RFP document" value={form.attachmentUrl} onChange={handleInputChange("attachmentUrl")}
+                            sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }} />
+                        </Box>
+                      </Box>
                     </Box>
                   </Box>
 
                 {/* Modal Footer */}
                 <Box sx={{ p: 2.5, backgroundColor: "#f9fafb", borderTop: "1px solid #e5e7eb", display: "flex", gap: 2, justifyContent: "flex-end" }}>
                   <Button onClick={handleCloseModal} sx={{ px: 3, py: 1, color: "#6b7280", fontWeight: 700, textTransform: "none" }}>Cancel</Button>
-                  <Button onClick={handleSubmit} variant="contained" disabled={!form.title || !form.category}
+                  <Button onClick={handleSubmit} variant="contained" disabled={!form.title || !form.category || !form.budgetMin || !form.budgetMax || !form.deadline}
                     sx={{ px: 4, py: 1, backgroundColor: PRIMARY, "&:hover": { backgroundColor: "#e67e00" }, fontWeight: 700, textTransform: "none", boxShadow: "none", borderRadius: 2 }}>
-                    Submit Listing Request
+                    Submit Project Request
                   </Button>
                 </Box>
               </Box>

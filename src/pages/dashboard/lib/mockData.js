@@ -76,37 +76,77 @@ export const mockProjectRequests = [
   {
     id: 'pr1', buyerId: '4', buyerName: 'Jane Buyer', buyerAvatar: 'https://i.pravatar.cc/40?img=5',
     title: 'Custom AI Training Dataset for Medical Imaging',
-    description: 'Need a curated dataset of annotated X-ray and MRI images for training a diagnostic AI model. Must include metadata and quality scores.',
+    description: 'Need a curated dataset of annotated X-ray and MRI images for training a diagnostic AI model. Must include DICOM metadata, quality scores, and validation splits. This is for a production healthcare AI system, so accuracy and completeness are critical.',
     category: 'Computer Science', dataType: 'Images', datasetSize: '50GB+',
     budgetMin: 2000, budgetMax: 5000, deadline: '2025-03-01',
-    preferredCollaborator: null, openToSuggestions: true,
-    priorityLevel: 'High', status: 'BIDDING', createdAt: new Date('2025-01-10'),
+    preferredCollaborator: '', openToSuggestions: true,
+    priorityLevel: 'High', status: 'BIDDING', sourcePreference: 'Medical institutions, public datasets', attachmentUrl: '',
+    createdAt: new Date('2025-01-10'),
     bids: [
-      { id: 'b1', collaboratorId: 'c1', collaboratorName: 'Dr. Aisha Patel', collaboratorAvatar: 'https://i.pravatar.cc/40?img=47', price: 3800, deliveryTime: '6 weeks', proposal: 'I have extensive experience with medical imaging datasets. I can deliver 50K annotated images with DICOM metadata.', status: 'PENDING' },
-      { id: 'b2', collaboratorId: 'c3', collaboratorName: 'Sofia Reyes', collaboratorAvatar: 'https://i.pravatar.cc/40?img=32', price: 4200, deliveryTime: '5 weeks', proposal: 'Specialized in computer vision datasets. Will include quality validation pipeline and augmentation scripts.', status: 'PENDING' },
+      { id: 'b1', collaboratorId: 'c1', collaboratorName: 'Dr. Aisha Patel', collaboratorAvatar: 'https://i.pravatar.cc/40?img=47', price: 3800, deliveryTime: '6 weeks', proposal: 'I have extensive experience with medical imaging datasets and HIPAA compliance. Can deliver 50K annotated images with DICOM metadata, quality validation, and augmentation scripts.', status: 'PENDING' },
+      { id: 'b2', collaboratorId: 'c3', collaboratorName: 'Sofia Reyes', collaboratorAvatar: 'https://i.pravatar.cc/40?img=32', price: 4200, deliveryTime: '5 weeks', proposal: 'Specialized in computer vision datasets. Will include quality validation pipeline, augmentation scripts, and train/test/val split. Used successfully in 12+ production AI projects.', status: 'PENDING' },
     ]
   },
   {
     id: 'pr2', buyerId: '4', buyerName: 'Jane Buyer', buyerAvatar: 'https://i.pravatar.cc/40?img=5',
     title: 'Financial Fraud Detection Dataset',
-    description: 'Require a labeled transaction dataset with fraud/non-fraud labels, including feature engineering for ML models.',
+    description: 'Looking for a comprehensive labeled transaction dataset with fraud/non-fraud classifications. Need feature-engineered data ready for ML model training. Must include transaction metadata, merchant info, and customer behavior patterns.',
     category: 'Finance and Investment', dataType: 'CSV', datasetSize: '10-50GB',
     budgetMin: 1500, budgetMax: 3000, deadline: '2025-02-15',
-    preferredCollaborator: 'c2', openToSuggestions: false,
-    priorityLevel: 'Medium', status: 'ACCEPTED', createdAt: new Date('2025-01-05'),
+    preferredCollaborator: 'James Okonkwo', openToSuggestions: false,
+    priorityLevel: 'Medium', status: 'ACCEPTED', sourcePreference: 'Synthetic or anonymized real data', attachmentUrl: 'https://example.com/fraud-detection-spec.pdf',
+    createdAt: new Date('2025-01-05'),
     bids: [
-      { id: 'b3', collaboratorId: 'c2', collaboratorName: 'James Okonkwo', collaboratorAvatar: 'https://i.pravatar.cc/40?img=12', price: 2500, deliveryTime: '3 weeks', proposal: 'Expert in financial data pipelines. Will provide 1M+ transactions with 40+ engineered features.', status: 'ACCEPTED' },
+      { id: 'b3', collaboratorId: 'c2', collaboratorName: 'James Okonkwo', collaboratorAvatar: 'https://i.pravatar.cc/40?img=12', price: 2500, deliveryTime: '3 weeks', proposal: 'Expert in financial data pipelines with 8 years experience. Will provide 1M+ transactions with 40+ engineered features including RFM metrics, velocity checks, and behavioral clustering.', status: 'ACCEPTED' },
     ]
   },
   {
     id: 'pr3', buyerId: '6', buyerName: 'Alice Chen', buyerAvatar: 'https://i.pravatar.cc/40?img=9',
     title: 'Climate Change Impact Dataset for Agriculture',
-    description: 'Need historical climate data correlated with crop yield data across 20 countries, cleaned and enriched.',
+    description: 'Seeking historical climate data correlated with crop yield information across 20+ countries. Need cleaned, enriched data with weather patterns, soil conditions, and yield outcomes. Target is agricultural policy research and sustainability analysis.',
     category: 'Agriculture and Environment', dataType: 'CSV', datasetSize: '1-10GB',
     budgetMin: 800, budgetMax: 2000, deadline: '2025-04-01',
-    preferredCollaborator: null, openToSuggestions: true,
-    priorityLevel: 'Low', status: 'PENDING', createdAt: new Date('2025-01-12'),
+    preferredCollaborator: '', openToSuggestions: true,
+    priorityLevel: 'Low', status: 'PENDING', sourcePreference: 'NOAA, FAO, national weather services', attachmentUrl: '',
+    createdAt: new Date('2025-01-12'),
     bids: []
+  },
+  {
+    id: 'pr4', buyerId: '10', buyerName: 'Eva Martinez', buyerAvatar: 'https://i.pravatar.cc/40?img=11',
+    title: 'E-commerce Customer Behavior Analytics Dataset',
+    description: 'Need comprehensive customer behavior data including browsing patterns, purchase history, cart abandonment, and product preferences. Data should cover 6+ months and include demographic and behavioral segmentation.',
+    category: 'Trade and Industry', dataType: 'CSV', datasetSize: '10-50GB',
+    budgetMin: 1200, budgetMax: 2800, deadline: '2025-03-20',
+    preferredCollaborator: '', openToSuggestions: true,
+    priorityLevel: 'High', status: 'BIDDING', sourcePreference: 'Anonymized real-world e-commerce platforms', attachmentUrl: '',
+    createdAt: new Date('2025-01-15'),
+    bids: [
+      { id: 'b4', collaboratorId: 'c2', collaboratorName: 'James Okonkwo', collaboratorAvatar: 'https://i.pravatar.cc/40?img=12', price: 2200, deliveryTime: '4 weeks', proposal: 'Can provide comprehensive e-commerce dataset with behavioral features, cohort analysis, and predictive RFM scoring already calculated.', status: 'PENDING' },
+    ]
+  },
+  {
+    id: 'pr5', buyerId: '4', buyerName: 'Jane Buyer', buyerAvatar: 'https://i.pravatar.cc/40?img=5',
+    title: 'Genomics Research Dataset - Disease Markers',
+    description: 'Looking for genetic sequencing data with disease markers and phenotype annotations. Need data from diverse populations with proper consent documentation and quality metrics.',
+    category: 'Social Services', dataType: 'Mixed', datasetSize: '50GB+',
+    budgetMin: 3500, budgetMax: 7000, deadline: '2025-05-01',
+    preferredCollaborator: '', openToSuggestions: true,
+    priorityLevel: 'High', status: 'PENDING', sourcePreference: 'GEO, biobanks, research institutions', attachmentUrl: 'https://example.com/genomics-spec.docx',
+    createdAt: new Date('2025-01-18'),
+    bids: []
+  },
+  {
+    id: 'pr6', buyerId: '6', buyerName: 'Alice Chen', buyerAvatar: 'https://i.pravatar.cc/40?img=9',
+    title: 'Urban Smart City Infrastructure Data',
+    description: 'Need comprehensive smart city dataset including traffic patterns, air quality, energy consumption, and infrastructure performance metrics across major cities.',
+    category: 'Urban Development and Housing', dataType: 'JSON', datasetSize: '10-50GB',
+    budgetMin: 2500, budgetMax: 4500, deadline: '2025-04-15',
+    preferredCollaborator: '', openToSuggestions: true,
+    priorityLevel: 'Medium', status: 'COMPLETED', sourcePreference: 'City sensors, IoT networks, municipal APIs', attachmentUrl: '',
+    createdAt: new Date('2024-12-01'),
+    bids: [
+      { id: 'b5', collaboratorId: 'c5', collaboratorName: 'Fatima Al-Hassan', collaboratorAvatar: 'https://i.pravatar.cc/40?img=25', price: 3800, deliveryTime: '8 weeks', proposal: 'Delivered similar project successfully last year. Can integrate data from 15+ city sources with real-time streaming capability.', status: 'ACCEPTED' },
+    ]
   },
 ];
 

@@ -47,6 +47,7 @@ import BuyerPurchasesPage from "./pages/dashboard/buyer/PurchasesPage";
 import BuyerWishlistPage from "./pages/dashboard/buyer/WishlistPage";
 import BuyerRecommendationsPage from "./pages/dashboard/buyer/RecommendationsPage";
 import BuyerBudgetTrackerPage from "./pages/dashboard/buyer/BudgetTrackerPage";
+import BuyerRequestsPage from "./pages/dashboard/buyer/RequestsPage";
 
 /* ===================== Seller Sub-pages ===================== */
 import SellerListingsPage from "./pages/dashboard/seller/ListingsPage";
@@ -55,6 +56,7 @@ import SellerSalesAnalyticsPage from "./pages/dashboard/seller/SalesAnalyticsPag
 import SellerInventoryPage from "./pages/dashboard/seller/InventoryPage";
 import SellerAdvertisementsPage from "./pages/dashboard/seller/AdvertisementsPage";
 import SellerCustomerChatsPage from "./pages/dashboard/seller/CustomerChatsPage";
+import SellerBidsPage from "./pages/dashboard/seller/BidsPage";
 
 /* ===================== Viewer Sub-pages ===================== */
 import ViewerBookmarksPage from "./pages/dashboard/viewer/BookmarksPage";
@@ -89,12 +91,14 @@ export default function App() {
       <Route path="/profile" element={<UserProfile />} />
 
       <Route path="/dashboard/buyer" element={<BuyerDashboard />} />
+      <Route path="/dashboard/buyer/requests" element={<BuyerRequestsPage />} />
       <Route path="/dashboard/buyer/purchases" element={<BuyerPurchasesPage />} />
       <Route path="/dashboard/buyer/wishlist" element={<BuyerWishlistPage />} />
       <Route path="/dashboard/buyer/recommendations" element={<BuyerRecommendationsPage />} />
       <Route path="/dashboard/buyer/budget" element={<BuyerBudgetTrackerPage />} />
 
       <Route path="/dashboard/seller" element={<SellerDashboard />} />
+      <Route path="/dashboard/seller/bids" element={<SellerBidsPage />} />
       <Route path="/dashboard/seller/listings" element={<SellerListingsPage />} />
       <Route path="/dashboard/seller/pending" element={<SellerSalesPendingPage />} />
       <Route path="/dashboard/seller/analytics" element={<SellerSalesAnalyticsPage />} />

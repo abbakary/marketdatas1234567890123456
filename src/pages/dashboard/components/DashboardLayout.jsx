@@ -3,7 +3,7 @@ import { useNavigate, useLocation, Link } from 'react-router-dom';
 import {
   LayoutDashboard, Users, Database, DollarSign, Settings, FileCheck, BarChart3,
   ShoppingCart, Heart, ListChecks, Package, Eye, Bookmark, History, FileText,
-  Menu, X, LogOut, Bell, Search, ChevronDown, ChevronRight, User,
+  Menu, X, LogOut, Bell, Search, ChevronDown, ChevronRight, User, Zap, Send,
 } from 'lucide-react';
 import logo from '../../../assets/dali-data-logo.png';
 
@@ -28,6 +28,7 @@ const roleNavItems = {
   ],
   seller: [
     { label: 'Overview', href: '/dashboard/seller', icon: LayoutDashboard },
+    { label: 'Bids & Opportunities', href: '/dashboard/seller/bids', icon: Zap },
     { label: 'Sales Pending', href: '/dashboard/seller/pending', icon: FileCheck },
     { label: 'My Listings', href: '/dashboard/seller/listings', icon: Package },
     { label: 'Sales Analytics', href: '/dashboard/seller/analytics', icon: BarChart3 },
@@ -37,6 +38,7 @@ const roleNavItems = {
   ],
   buyer: [
     { label: 'Overview', href: '/dashboard/buyer', icon: LayoutDashboard },
+    { label: 'Project Requests', href: '/dashboard/buyer/requests', icon: Send },
     { label: 'Purchases', href: '/dashboard/buyer/purchases', icon: ShoppingCart },
     { label: 'Wishlist', href: '/dashboard/buyer/wishlist', icon: Heart },
     { label: 'Recommendations', href: '/dashboard/buyer/recommendations', icon: ListChecks },
