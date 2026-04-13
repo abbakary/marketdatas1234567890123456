@@ -72,20 +72,20 @@ export default function BuyerDashboard() {
                                <Pie data={budgetData} cx="50%" cy="50%" innerRadius={55} outerRadius={80} paddingAngle={8} dataKey="value" stroke="none">
                                  {budgetData.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                                </Pie>
-                               <Tooltip contentStyle={tt} formatter={v => [`$${v.toLocaleString()}`, '']} />
+                               <Tooltip contentStyle={chartColors.tooltipStyle} formatter={v => [`$${v.toLocaleString()}`, '']} />
                            </PieChart>
                         </ResponsiveContainer>
                      </div>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14 }}>
-                            <span style={{ color: '#718096', fontWeight: 600 }}>Budget Used</span>
-                            <span style={{ color: '#1a202c', fontWeight: 800 }}>${buyerStats.budgetUsed.toLocaleString()}</span>
+                            <span style={{ color: themeColors.textMuted, fontWeight: 600 }}>Budget Used</span>
+                            <span style={{ color: themeColors.text, fontWeight: 800 }}>${buyerStats.budgetUsed.toLocaleString()}</span>
                          </div>
-                         <div style={{ height: 10, background: '#edf2f7', borderRadius: 5, overflow: 'hidden' }}>
+                         <div style={{ height: 10, background: themeColors.border, borderRadius: 5, overflow: 'hidden' }}>
                             <div style={{ height: '100%', width: `${budgetPct}%`, background: 'linear-gradient(90deg, #FF8C00, #ED8936)', borderRadius: 5 }} />
                          </div>
                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14 }}>
-                            <span style={{ color: '#718096', fontWeight: 600 }}>Remaining</span>
+                            <span style={{ color: themeColors.textMuted, fontWeight: 600 }}>Remaining</span>
                             <span style={{ color: '#20B2AA', fontWeight: 800 }}>${(buyerStats.budgetLimit - buyerStats.budgetUsed).toLocaleString()}</span>
                          </div>
                       </div>
@@ -99,23 +99,23 @@ export default function BuyerDashboard() {
                   <div style={{ overflowX: 'auto' }}>
                      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                          <thead>
-                            <tr style={{ borderBottom: '1px solid #edf2f7' }}>
+                            <tr style={{ borderBottom: `1px solid ${themeColors.border}` }}>
                                {['Dataset', 'Date', 'Amount', 'Status', 'Actions'].map(h => (
-                                  <th key={h} style={{ padding: '16px', textAlign: h === 'Actions' ? 'right' : 'left', fontSize: 13, fontWeight: 700, color: '#718096', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{h}</th>
+                                  <th key={h} style={{ padding: '16px', textAlign: h === 'Actions' ? 'right' : 'left', fontSize: 13, fontWeight: 700, color: themeColors.textMuted, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{h}</th>
                                ))}
                             </tr>
                          </thead>
                          <tbody>
                             {mockPurchases.slice(0, 5).map(p => (
-                               <tr key={p.id} style={{ borderBottom: '1px solid #f7fafc', transition: 'background 0.2s' }}>
-                                  <td style={{ padding: '16px', fontSize: 14, fontWeight: 700, color: '#1a202c' }}>{p.datasetTitle}</td>
-                                  <td style={{ padding: '16px', fontSize: 13, color: '#718096', fontWeight: 600 }}>{p.date.toLocaleDateString()}</td>
+                               <tr key={p.id} style={{ borderBottom: `1px solid ${themeColors.border}`, transition: 'background 0.2s' }}>
+                                  <td style={{ padding: '16px', fontSize: 14, fontWeight: 700, color: themeColors.text }}>{p.datasetTitle}</td>
+                                  <td style={{ padding: '16px', fontSize: 13, color: themeColors.textMuted, fontWeight: 600 }}>{p.date.toLocaleDateString()}</td>
                                   <td style={{ padding: '16px', fontSize: 14, fontWeight: 800, color: '#20B2AA' }}>${p.amount}</td>
                                   <td style={{ padding: '16px' }}><Badge style={{ ...statusStyle(p.status), fontWeight: 700, padding: '4px 10px', borderRadius: 8 }}>{p.status}</Badge></td>
                                   <td style={{ padding: '16px', textAlign: 'right' }}>
                                      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12 }}>
-                                        <button style={{ padding: '8px 12px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 10, color: '#4a5568', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 700 }}><Download size={14} /> Download</button>
-                                        <button style={{ padding: '8px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 10, color: '#4a5568', cursor: 'pointer' }}><Eye size={16} /></button>
+                                        <button style={{ padding: '8px 12px', background: themeColors.hoverBg, border: `1px solid ${themeColors.border}`, borderRadius: 10, color: themeColors.textMuted, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 700 }}><Download size={14} /> Download</button>
+                                        <button style={{ padding: '8px', background: themeColors.hoverBg, border: `1px solid ${themeColors.border}`, borderRadius: 10, color: themeColors.textMuted, cursor: 'pointer' }}><Eye size={16} /></button>
                                      </div>
                                   </td>
                                </tr>
