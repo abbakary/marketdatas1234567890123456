@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import {
-  Box, Container, Typography, Card, CardContent, Button, Chip, Tab, Tabs,
-  Dialog, DialogTitle, DialogContent, DialogActions, TextField, IconButton,
+  Box, Typography, Card, CardContent, Button, Chip,
+  Dialog, DialogTitle, DialogContent, DialogActions, IconButton,
 } from '@mui/material';
 import {
-  FileText, DollarSign, Calendar, Users, Eye, X, CheckCircle, Clock,
-  AlertCircle, TrendingUp, Trash2, Edit, Download,
+  FileText, Eye, CheckCircle, Clock, AlertCircle, TrendingUp, Trash2,
 } from 'lucide-react';
 import { useThemeColors } from '../../../utils/useThemeColors';
+import DashboardLayout from '../components/DashboardLayout';
 import projectRequestService from '../../../utils/projectRequestService';
 
 const PRIMARY = '#FF8C00';
@@ -16,7 +16,7 @@ const SUCCESS = '#16a34a';
 const WARNING = '#f59e0b';
 const DANGER = '#dc2626';
 
-export default function AdminRequestsPage() {
+export default function AdminRequestsPage({ role = 'admin' }) {
   const themeColors = useThemeColors();
   const [tabValue, setTabValue] = useState(0);
   const [requests, setRequests] = useState([]);
@@ -89,8 +89,8 @@ export default function AdminRequestsPage() {
   ];
 
   return (
-    <Box sx={{ minHeight: '100vh', backgroundColor: themeColors.bg, py: 4, transition: 'background-color 0.3s ease' }}>
-      <Container maxWidth="xl">
+    <DashboardLayout role={role}>
+      <Box sx={{ backgroundColor: themeColors.bg, transition: 'background-color 0.3s ease' }}>
         {/* Header */}
         <Box sx={{ mb: 4 }}>
           <Typography sx={{ fontSize: '2rem', fontWeight: 800, color: themeColors.text, mb: 0.5, transition: 'color 0.3s ease' }}>
@@ -252,8 +252,8 @@ export default function AdminRequestsPage() {
             </>
           )}
         </Dialog>
-      </Container>
-    </Box>
+      </Box>
+    </DashboardLayout>
   );
 }
 

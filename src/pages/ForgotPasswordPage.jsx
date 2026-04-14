@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
 
 // ---- Assets ----
-import logo from "../assets/dali-data-logo.png";
+import logo from "../assets/logo1.png";
 import banner1 from "../assets/banner1.png";
 
 // ---- Icons ----

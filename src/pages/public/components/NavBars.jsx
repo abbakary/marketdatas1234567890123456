@@ -29,7 +29,7 @@ import {
   Sun,
   Moon,
 } from "lucide-react";
-import logo from "../../../assets/dali-data-logo.png";
+import logo from "../../../assets/logo1.png";
 import { useTheme } from "../../../context/ThemeContext";
 
 const PRIMARY_COLOR = "#61C5C3";
@@ -102,10 +102,10 @@ export default function NavBar() {
 
   const navLinks = [
     { label: "Dataset", path: "/public/datasets", icon: Database },
-    { label: "Trade", path: "/public/trade", icon: Globe },
-    { label: "Budget", path: "/public/budget", icon: DollarSign },
     { label: "Project", path: "/public/project", icon: FolderOpen },
+    { label: "Budget", path: "/public/budget", icon: DollarSign },
     { label: "Funds", path: "/public/funds", icon: Wallet },
+    { label: "Trade", path: "/public/trade", icon: Globe },
     { label: "Analysis", path: "/public/analysis", icon: BarChart3 },
     { label: "Report", path: "/public/reports", icon: FileText },
   ];

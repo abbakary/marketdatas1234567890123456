@@ -6,7 +6,7 @@ import {
   Menu, X, LogOut, Bell, Search, ChevronDown, ChevronRight, User, Zap, Send,
 } from 'lucide-react';
 import { useThemeColors } from '../../../utils/useThemeColors';
-import logo from '../../../assets/dali-data-logo.png';
+import logo from '../../../assets/logo1.png';
 
 const TOKEN_KEY = 'dali-token';
 const USER_KEY = 'dali-user';
@@ -16,6 +16,9 @@ const roleNavItems = {
     { label: 'Overview', href: '/dashboard/admin', icon: LayoutDashboard },
     { label: 'User Management', href: '/dashboard/admin/users', icon: Users },
     { label: 'Datasets', href: '/dashboard/admin/datasets', icon: Database },
+    { label: 'Project Requests', href: '/dashboard/admin/requests', icon: Send },
+    { label: 'Custom Reports', href: '/dashboard/admin/reports', icon: FileText },
+    { label: 'Projects', href: '/dashboard/admin/projects', icon: BarChart3 },
     { label: 'Revenue Reports', href: '/dashboard/admin/revenue', icon: DollarSign },
     { label: 'Settings', href: '/dashboard/admin/settings', icon: Settings },
   ],
@@ -24,6 +27,9 @@ const roleNavItems = {
     { label: 'Review Queue', href: '/dashboard/editor/reviews', icon: FileCheck },
     { label: 'Approvals', href: '/dashboard/editor/approvals', icon: ListChecks },
     { label: 'Moderation', href: '/dashboard/editor/moderation', icon: Eye },
+    { label: 'Project Requests', href: '/dashboard/editor/requests', icon: Send },
+    { label: 'Custom Reports', href: '/dashboard/editor/reports', icon: FileText },
+    { label: 'Projects', href: '/dashboard/editor/projects', icon: BarChart3 },
     { label: 'Revenue Analytics', href: '/dashboard/editor/analytics', icon: BarChart3 },
     { label: 'Settings', href: '/dashboard/editor/settings', icon: Settings },
   ],
@@ -153,7 +159,7 @@ export default function DashboardLayout({ children, role }) {
         }
         @media (min-width: 1024px) {
           .lg-sidebar { transform: translateX(0) !important; }
-          .lg-main { padding-right: 256px !important; }
+          .lg-main { margin-right: 256px !important; padding-right: 0 !important; }
           .lg-menu-btn { display: none !important; }
         }
       `}</style>
@@ -184,9 +190,9 @@ export default function DashboardLayout({ children, role }) {
               <img src={logo} alt="DaliData Logo" style={{ height: 36, width: 'auto', objectFit: 'contain', display: 'block' }} />
             </Link>
           </div>
-          <button onClick={() => setSidebarOpen(false)} style={{ backgroundColor: colors.card, border: `1px solid ${colors.border}`, color: colors.textMuted, cursor: 'pointer', padding: 6, borderRadius: 10, display: 'flex', transition: 'all 0.2s' }}
+          <button onClick={() => setSidebarOpen(false)} style={{ backgroundColor: themeColors.card, border: `1px solid ${themeColors.border}`, color: themeColors.textMuted, cursor: 'pointer', padding: 6, borderRadius: 10, display: 'flex', transition: 'all 0.2s' }}
             onMouseEnter={e => { e.currentTarget.style.color = '#ef4444'; e.currentTarget.style.borderColor = '#fee2e2'; }}
-            onMouseLeave={e => { e.currentTarget.style.color = colors.textMuted; e.currentTarget.style.borderColor = colors.border; }}
+            onMouseLeave={e => { e.currentTarget.style.color = themeColors.textMuted; e.currentTarget.style.borderColor = themeColors.border; }}
           >
             <X size={18} />
           </button>
@@ -243,7 +249,7 @@ export default function DashboardLayout({ children, role }) {
                  {user?.name ? user.name.split(' ').map(n => n[0]).join('').toUpperCase() : role[0].toUpperCase()}
               </div>
               <div style={{ overflow: 'hidden' }}>
-                 <div style={{ fontSize: 15, fontWeight: 800, color: colors.text, whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{user?.name || 'User'}</div>
+                 <div style={{ fontSize: 15, fontWeight: 800, color: themeColors.text, whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{user?.name || 'User'}</div>
                  <div style={{ 
                     display: 'inline-block', fontSize: 10, fontWeight: 700, 
                     color: currentRoleStyle.primary, background: `${currentRoleStyle.primary}15`,
@@ -260,12 +266,12 @@ export default function DashboardLayout({ children, role }) {
                 onClick={() => { setSidebarOpen(false); navigate('/profile'); }}
                 style={{
                   display: 'flex', alignItems: 'center', gap: 12, width: '100%', padding: '10px 14px',
-                  backgroundColor: themeColors.isDarkMode ? '#2d3748' : '#f1f5f9', border: `1px solid ${colors.border}`, cursor: 'pointer', fontSize: 13,
-                  color: colors.text, borderRadius: 12, fontWeight: 600, transition: 'all 0.2s',
+                  backgroundColor: themeColors.isDarkMode ? '#2d3748' : '#f1f5f9', border: `1px solid ${themeColors.border}`, cursor: 'pointer', fontSize: 13,
+                  color: themeColors.text, borderRadius: 12, fontWeight: 600, transition: 'all 0.2s',
                   boxShadow: themeColors.isDarkMode ? '0 2px 4px rgba(0,0,0,0.2)' : '0 2px 4px rgba(0,0,0,0.02)'
                 }}
                 onMouseEnter={e => { e.currentTarget.style.borderColor = currentRoleStyle.primary; e.currentTarget.style.color = currentRoleStyle.primary; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = colors.border; e.currentTarget.style.color = colors.text; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = themeColors.border; e.currentTarget.style.color = themeColors.text; }}
               >
                 <User size={18} /> Profile Details
               </button>
@@ -288,7 +294,7 @@ export default function DashboardLayout({ children, role }) {
       {/* Desktop Sidebar always visible style is already in the <style> tag above */}
 
       {/* Main content */}
-      <div className="lg-main" style={{ paddingRight: 256, transition: 'padding 0.3s ease' }}>
+      <div className="lg-main" style={{ transition: 'margin 0.3s ease' }}>
         {/* Header */}
         <header style={{
           position: 'sticky', top: 0, zIndex: 30,

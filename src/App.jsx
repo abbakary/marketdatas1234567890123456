@@ -50,6 +50,9 @@ import EditorReviewsPage from "./pages/dashboard/editor/ReviewsPage";
 import EditorApprovalsPage from "./pages/dashboard/editor/ApprovalsPage";
 import EditorModerationPage from "./pages/dashboard/editor/ModerationPage";
 import EditorRevenueAnalyticsPage from "./pages/dashboard/editor/RevenueAnalyticsPage";
+import EditorRequestsPage from "./pages/dashboard/admin/RequestsPage";
+import EditorReportsPage from "./pages/dashboard/admin/ReportsPage";
+import EditorProjectsPage from "./pages/dashboard/admin/ProjectsPage";
 
 /* ===================== Buyer Sub-pages ===================== */
 import BuyerPurchasesPage from "./pages/dashboard/buyer/PurchasesPage";
@@ -121,6 +124,9 @@ function AppRoutes() {
       <Route path="/dashboard/editor/approvals" element={<EditorApprovalsPage />} />
       <Route path="/dashboard/editor/moderation" element={<EditorModerationPage />} />
       <Route path="/dashboard/editor/analytics" element={<EditorRevenueAnalyticsPage />} />
+      <Route path="/dashboard/editor/requests" element={<EditorRequestsPage role="editor" />} />
+      <Route path="/dashboard/editor/reports" element={<EditorReportsPage role="editor" />} />
+      <Route path="/dashboard/editor/projects" element={<EditorProjectsPage role="editor" />} />
       <Route path="/dashboard/editor/settings" element={<SettingsPage role="editor" />} />
 
       <Route path="/dashboard/admin" element={<AdminDashboard />} />

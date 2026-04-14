@@ -169,6 +169,7 @@ export default function BudgetPage() {
                     onCart={() => toggleCart(d.id)} onWishlist={() => toggleWishlist(d.id)}
                     onOpen={() => navigate(`/dataset-info/${d.id}`, { state: { dataset: d } })}
                     tierColor={tierColor[d.tier]}
+                    PRIMARY={PRIMARY}
                   />
                 ))}
               </Box>
@@ -187,7 +188,7 @@ export default function BudgetPage() {
   );
 }
 
-function BudgetDatasetCard({ dataset, inCart, inWishlist, onCart, onWishlist, onOpen, tierColor }) {
+function BudgetDatasetCard({ dataset, inCart, inWishlist, onCart, onWishlist, onOpen, tierColor, PRIMARY }) {
   return (
     <Card sx={{ borderRadius: "12px", overflow: "hidden", border: `1px solid var(--border-color)`, boxShadow: "none", transition: "all 0.3s ease", cursor: "pointer", "&:hover": { transform: "translateY(-4px)", boxShadow: "0 10px 24px rgba(97,197,195,0.12)", borderColor: PRIMARY } }}>
       <Box sx={{ height: 150, backgroundImage: `url(${dataset.image})`, backgroundSize: "cover", backgroundPosition: "center", position: "relative" }} onClick={onOpen}>

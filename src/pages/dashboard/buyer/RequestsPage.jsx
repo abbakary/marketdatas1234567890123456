@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react';
 import {
-  Box, Container, Typography, Card, CardContent, Button, Chip, Tab, Tabs,
-  Avatar, AvatarGroup, Dialog, DialogTitle, DialogContent, DialogActions,
-  LinearProgress, IconButton,
+  Box, Typography, Card, CardContent, Button, Chip, Tab, Tabs,
+  Avatar, Dialog, DialogTitle, DialogContent, DialogActions,
+  IconButton,
 } from '@mui/material';
 import {
   FileText, DollarSign, Calendar, Users, Eye, X, CheckCircle, Clock,
   AlertCircle, TrendingUp, Star, Send, Award,
 } from 'lucide-react';
 import { useThemeColors } from '../../../utils/useThemeColors';
+import DashboardLayout from '../components/DashboardLayout';
 import projectRequestService from '../../../utils/projectRequestService';
 
 const PRIMARY = '#FF8C00';
@@ -98,8 +99,8 @@ export default function RequestsPage() {
   const filteredRequests = filter === 'all' ? requests : requests.filter(r => r.status.toLowerCase() === filter);
 
   return (
-    <Box sx={{ minHeight: '100vh', backgroundColor: themeColors.bg, py: 4, transition: 'background-color 0.3s ease' }}>
-      <Container maxWidth="xl">
+    <DashboardLayout role="buyer">
+      <Box sx={{ backgroundColor: themeColors.bg, transition: 'background-color 0.3s ease' }}>
         {/* Header */}
         <Box sx={{ mb: 4 }}>
           <Typography sx={{ fontSize: '2rem', fontWeight: 800, color: themeColors.text, mb: 0.5, transition: 'color 0.3s ease' }}>
@@ -306,8 +307,8 @@ export default function RequestsPage() {
             </Button>
           </DialogActions>
         </Dialog>
-      </Container>
-    </Box>
+      </Box>
+    </DashboardLayout>
   );
 }
 
