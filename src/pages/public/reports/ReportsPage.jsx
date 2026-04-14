@@ -46,19 +46,19 @@ const reportDatasets = [
   { id: 6, title: "Renewable Energy Transition Report 2024", author: "EnergyStats Institute", authorAvatar: "ES", category: "Natural Resources and Energy", usability: "9.8", updated: "Updated 6 days ago", files: "4 Files (PDF, CSV)", size: "2.1 GB", downloads: "1,678 downloads", votes: 58, image: "https://images.unsplash.com/photo-1556228578-8c89e6adf883?auto=format&fit=crop&w=900&q=80", price: "399.00", views: 8340, rating: 4.7, reportType: "Annual", pages: 118, citations: 156, abstract: "Global renewable energy adoption rates, investment flows, and carbon reduction progress." },
 ];
 
-const reportStats = [
-  { label: "Published Reports", value: "3,840", change: "+22%", icon: <FileText size={22} color={PRIMARY} /> },
-  { label: "Total Citations", value: "48.2K", change: "+18%", icon: <BookOpen size={22} color={PRIMARY} /> },
-  { label: "Total Views", value: "1.2M", change: "+31%", icon: <Eye size={22} color={PRIMARY} /> },
-  { label: "Contributors", value: "2,140", change: "+14%", icon: <Users size={22} color={PRIMARY} /> },
-];
-
 const reportTypes = ["All", "Annual", "Quarterly", "Semi-Annual", "Monthly", "Special"];
 
 export default function ReportsPage() {
   const navigate = useNavigate();
   const themeColors = useThemeColors();
   const PRIMARY = themeColors.teal;
+
+  const reportStats = [
+    { label: "Published Reports", value: "3,840", change: "+22%", icon: <FileText size={22} color={PRIMARY} /> },
+    { label: "Total Citations", value: "48.2K", change: "+18%", icon: <BookOpen size={22} color={PRIMARY} /> },
+    { label: "Total Views", value: "1.2M", change: "+31%", icon: <Eye size={22} color={PRIMARY} /> },
+    { label: "Contributors", value: "2,140", change: "+14%", icon: <Users size={22} color={PRIMARY} /> },
+  ];
   const [search, setSearch] = useState("");
   const [tab, setTab] = useState(0);
   const [selectedType, setSelectedType] = useState("All");
