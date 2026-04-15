@@ -23,7 +23,6 @@ import SubscriptionPage from "./pages/public/subscription/SubscriptionPage.jsx";
 import ProjectPage from "./pages/public/project/ProjectPage.jsx";
 import FundsPage from "./pages/public/funds/FundsPage.jsx";
 import AnalysisPage from "./pages/public/analysis/AnalysisPage.jsx";
-import ReportsPage from "./pages/public/reports/ReportsPage.jsx";
 /* ===================== User Profile ===================== */
 
 import UserProfile from "./pages/profile/UserProfile";
@@ -104,7 +103,6 @@ function AppRoutes() {
       <Route path="/public/project" element={<ProjectPage />} />
       <Route path="/public/funds" element={<FundsPage />} />
       <Route path="/public/analysis" element={<AnalysisPage />} />
-      <Route path="/public/reports" element={<ReportsPage />} />
 
       <Route path="/profile" element={<UserProfile />} />
 

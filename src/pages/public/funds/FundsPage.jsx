@@ -328,7 +328,7 @@ export default function FundsPage() {
             }}
           >
             {filtered.map(d => (
-              <FundingDatasetCard key={d.id} dataset={d} onOpen={() => navigate(`/dataset-info/${d.id}`, { state: { dataset: d } })} />
+              <FundingDatasetCard key={d.id} dataset={d} viewType={viewType} onOpen={() => navigate(`/dataset-info/${d.id}`, { state: { dataset: d } })} />
             ))}
           </Box>
 
@@ -449,13 +449,75 @@ export default function FundsPage() {
   );
 }
 
-function FundingDatasetCard({ dataset, onOpen }) {
+function FundingDatasetCard({ dataset, viewType, onOpen }) {
   const pct = Math.min(Math.round((dataset.fundingRaised / dataset.fundingGoal) * 100), 100);
   const isFunded = pct >= 100;
   const isEndingSoon = dataset.daysLeft > 0 && dataset.daysLeft <= 7;
 
   const typeColors = { Grant: "#3b82f6", Investment: "#8b5cf6", "Research Grant": "#f59e0b", Crowdfund: "#22c55e" };
   const typeColor = typeColors[dataset.fundingType] || PRIMARY;
+
+  if (viewType === "list") {
+    return (
+      <Card sx={{ borderRadius: "12px", overflow: "hidden", border: "1px solid #e5e7eb", boxShadow: "none", transition: "all 0.3s ease", cursor: "pointer", display: "flex", "&:hover": { boxShadow: "0 10px 24px rgba(97,197,195,0.12)", borderColor: PRIMARY } }} onClick={onOpen}>
+        {/* Image - Left side */}
+        <Box sx={{ width: 180, height: 160, flexShrink: 0, backgroundImage: `url(${dataset.image})`, backgroundSize: "cover", backgroundPosition: "center", position: "relative" }}>
+          <Box sx={{ position: "absolute", top: 8, left: 8, px: 1, py: 0.3, borderRadius: 1, backgroundColor: typeColor }}>
+            <Typography sx={{ fontSize: "0.7rem", fontWeight: 700, color: "#fff" }}>{dataset.fundingType}</Typography>
+          </Box>
+          {isFunded && (
+            <Box sx={{ position: "absolute", top: 8, right: 8, px: 1, py: 0.3, borderRadius: 1, backgroundColor: "#16a34a", display: "flex", alignItems: "center", gap: 0.5 }}>
+              <CheckCircle size={11} color="#fff" />
+              <Typography sx={{ fontSize: "0.7rem", fontWeight: 700, color: "#fff" }}>Funded!</Typography>
+            </Box>
+          )}
+          {isEndingSoon && !isFunded && (
+            <Box sx={{ position: "absolute", top: 8, right: 8, px: 1, py: 0.3, borderRadius: 1, backgroundColor: "#dc2626", display: "flex", alignItems: "center", gap: 0.5 }}>
+              <Clock size={11} color="#fff" />
+              <Typography sx={{ fontSize: "0.7rem", fontWeight: 700, color: "#fff" }}>{dataset.daysLeft}d left</Typography>
+            </Box>
+          )}
+        </Box>
+
+        {/* Content - Right side */}
+        <CardContent sx={{ p: 2, flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+          <Box>
+            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 1, mb: 0.6 }}>
+              <Typography sx={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-dark)", lineHeight: 1.3, display: "-webkit-box", WebkitLineClamp: 1, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{dataset.title}</Typography>
+            </Box>
+            <Typography sx={{ fontSize: "0.82rem", color: "#1f2937", fontWeight: 500, mb: 0.4 }}>{dataset.author}</Typography>
+            <Typography sx={{ fontSize: "0.8rem", color: "var(--text-muted)", mb: 1, display: "-webkit-box", WebkitLineClamp: 1, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{dataset.description}</Typography>
+
+            {/* Funding Progress */}
+            <Box sx={{ mb: 0.8 }}>
+              <Box sx={{ display: "flex", justifyContent: "space-between", mb: 0.5 }}>
+                <Typography sx={{ fontSize: "0.8rem", fontWeight: 700, color: "var(--text-dark)" }}>${dataset.fundingRaised.toLocaleString()}</Typography>
+                <Typography sx={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>of ${dataset.fundingGoal.toLocaleString()}</Typography>
+              </Box>
+              <LinearProgress variant="determinate" value={pct} sx={{ height: 6, borderRadius: 3, backgroundColor: "#e5e7eb", "& .MuiLinearProgress-bar": { backgroundColor: isFunded ? "#16a34a" : PRIMARY, borderRadius: 3 } }} />
+            </Box>
+          </Box>
+
+          {/* Footer */}
+          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 1 }}>
+            <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+              <Box sx={{ display: "flex", alignItems: "center", border: "1px solid #d1d5db", borderRadius: "6px", overflow: "hidden" }}>
+                <Box sx={{ px: 0.6, py: 0.2, borderRight: "1px solid #d1d5db", display: "flex", alignItems: "center" }}><ChevronUp size={11} /></Box>
+                <Box sx={{ px: 0.8, py: 0.2 }}><Typography sx={{ fontSize: "0.7rem", fontWeight: 700 }}>{dataset.votes}</Typography></Box>
+              </Box>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 0.3 }}>
+                <Users size={11} color="#6b7280" />
+                <Typography sx={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>{dataset.backers}</Typography>
+              </Box>
+            </Box>
+            <Box sx={{ px: 1.5, py: 0.5, backgroundColor: isFunded ? "#f0fdf4" : "#e6f7f6", borderRadius: "6px", border: `1px solid ${isFunded ? "#bbf7d0" : PRIMARY}` }}>
+              <Typography sx={{ fontSize: "0.75rem", fontWeight: 700, color: isFunded ? "#16a34a" : PRIMARY }}>{isFunded ? "View" : "Back"}</Typography>
+            </Box>
+          </Box>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card sx={{ borderRadius: "12px", overflow: "hidden", border: "1px solid #e5e7eb", boxShadow: "none", transition: "all 0.3s ease", cursor: "pointer", "&:hover": { transform: "translateY(-4px)", boxShadow: "0 10px 24px rgba(97,197,195,0.12)", borderColor: PRIMARY } }} onClick={onOpen}>

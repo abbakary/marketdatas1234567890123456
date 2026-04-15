@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Container,
@@ -15,13 +16,16 @@ import {
   MenuItem,
   Snackbar,
   Alert,
+  InputAdornment,
+  IconButton,
 } from "@mui/material";
-import { CreditCard, CheckCircle, Clock, XCircle, Send, ShieldCheck } from "lucide-react";
+import { CreditCard, CheckCircle, Clock, XCircle, Send, ShieldCheck, Mail, Lock, Eye, EyeOff } from "lucide-react";
 import PageLayout from "../components/PageLayout";
 import subscriptionRequestService from "../../../utils/subscriptionRequestService";
 
 const USER_KEY = "dali-user";
 const PRIMARY = "#61C5C3";
+const SUBSCRIPTION_HEADER_COLOR = "#8b5cf6";
 
 const PLANS = [
   {
@@ -76,11 +80,16 @@ function safeParseJSON(value) {
 }
 
 export default function SubscriptionPage() {
+  const navigate = useNavigate();
   const [authUser, setAuthUser] = useState(null);
   const [requestOpen, setRequestOpen] = useState(false);
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [snack, setSnack] = useState({ open: false, severity: "success", message: "" });
   const [latestRequest, setLatestRequest] = useState(null);
   const [activeSubscription, setActiveSubscription] = useState(null);
+  const [pendingPlanKey, setPendingPlanKey] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [loginForm, setLoginForm] = useState({ email: "", password: "" });
 
   const [form, setForm] = useState({
     planKey: "standard",
@@ -133,6 +142,11 @@ export default function SubscriptionPage() {
   }, [userId]);
 
   const openRequestDialog = (planKey) => {
+    if (!userId) {
+      setPendingPlanKey(planKey);
+      setLoginModalOpen(true);
+      return;
+    }
     const plan = PLANS.find((p) => p.key === planKey) || PLANS[1];
     setForm((p) => ({
       ...p,
@@ -190,14 +204,39 @@ export default function SubscriptionPage() {
     }
   };
 
+  const handleLoginSubmit = () => {
+    if (!loginForm.email.trim() || !loginForm.password.trim()) {
+      setSnack({ open: true, severity: "error", message: "Please enter email and password." });
+      return;
+    }
+    // Simulate login (in a real app, this would call an API)
+    const mockUser = {
+      id: Date.now(),
+      email: loginForm.email,
+      name: loginForm.email.split("@")[0],
+      company: "",
+      role: "viewer",
+    };
+    localStorage.setItem(USER_KEY, JSON.stringify(mockUser));
+    window.dispatchEvent(new Event("auth:updated"));
+    setAuthUser(mockUser);
+    setLoginModalOpen(false);
+    setLoginForm({ email: "", password: "" });
+    setSnack({ open: true, severity: "success", message: "Logged in successfully!" });
+    // Open the subscription request dialog for the pending plan
+    if (pendingPlanKey) {
+      setTimeout(() => openRequestDialog(pendingPlanKey), 300);
+    }
+  };
+
   return (
     <PageLayout>
       <Box sx={{ minHeight: "100vh", backgroundColor: "var(--bg-gray)", py: 4 }}>
         <Container maxWidth="xl">
           <Box sx={{ mb: 4 }}>
             <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-              <CreditCard size={28} color={PRIMARY} />
-              <Typography sx={{ fontSize: "1.8rem", fontWeight: 800, color: "var(--text-dark)" }}>
+              <CreditCard size={28} color={SUBSCRIPTION_HEADER_COLOR} />
+              <Typography sx={{ fontSize: "1.8rem", fontWeight: 800, color: SUBSCRIPTION_HEADER_COLOR }}>
                 Subscription
               </Typography>
             </Box>
@@ -281,7 +320,7 @@ export default function SubscriptionPage() {
                         variant="outlined"
                         onClick={handleCancelRequest}
                         disabled={latestRequest.status !== "PENDING"}
-                        sx={{ textTransform: "none", fontWeight: 800, borderRadius: 1.5, borderColor: "#e5e7eb", color: "var(--text-dark)" }}
+                        sx={{ textTransform: "none", fontWeight: 800, borderRadius: 1.5, borderColor: "var(--border-color)", color: "var(--text-dark)" }}
                       >
                         Cancel request
                       </Button>
@@ -290,7 +329,7 @@ export default function SubscriptionPage() {
                         onClick={() => openRequestDialog(latestRequest.planKey)}
                         disabled={latestRequest.status !== "PENDING"}
                         startIcon={<Send size={16} />}
-                        sx={{ textTransform: "none", fontWeight: 800, borderRadius: 1.5, backgroundColor: PRIMARY, boxShadow: "none", "&:hover": { backgroundColor: "#49b2b1", boxShadow: "none" } }}
+                        sx={{ textTransform: "none", fontWeight: 800, borderRadius: 1.5, backgroundColor: PRIMARY, color: "#fff", boxShadow: "none", "&:hover": { backgroundColor: "#49b2b1", boxShadow: "none" } }}
                       >
                         Resubmit
                       </Button>
@@ -353,11 +392,15 @@ export default function SubscriptionPage() {
                       borderRadius: 1.5,
                       textTransform: "none",
                       fontWeight: 900,
-                      backgroundColor: plan.popular ? PRIMARY : "#fff",
+                      backgroundColor: plan.popular ? PRIMARY : "transparent",
                       borderColor: PRIMARY,
                       color: plan.popular ? "#fff" : PRIMARY,
                       boxShadow: "none",
-                      "&:hover": { backgroundColor: plan.popular ? "#49b2b1" : "#e6f7f6", boxShadow: "none" },
+                      "&:hover": {
+                        backgroundColor: plan.popular ? "#49b2b1" : PRIMARY,
+                        color: plan.popular ? "#fff" : "#fff",
+                        boxShadow: "none"
+                      },
                     }}
                   >
                     {plan.cta}
@@ -452,7 +495,7 @@ export default function SubscriptionPage() {
               variant="contained"
               onClick={handleSubmit}
               startIcon={<Send size={16} />}
-              sx={{ textTransform: "none", fontWeight: 900, backgroundColor: PRIMARY, boxShadow: "none", "&:hover": { backgroundColor: "#49b2b1", boxShadow: "none" } }}
+              sx={{ textTransform: "none", fontWeight: 900, backgroundColor: PRIMARY, color: "#fff", boxShadow: "none", "&:hover": { backgroundColor: "#49b2b1", boxShadow: "none" } }}
             >
               Submit request
             </Button>
@@ -464,8 +507,96 @@ export default function SubscriptionPage() {
             {snack.message}
           </Alert>
         </Snackbar>
+
+        {/* Slide-in Login Modal */}
+        <Dialog
+          open={loginModalOpen}
+          onClose={() => setLoginModalOpen(false)}
+          fullWidth
+          maxWidth="sm"
+          PaperProps={{
+            sx: {
+              borderRadius: 2,
+              animation: "slideInRight 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)",
+              "@keyframes slideInRight": {
+                "0%": { transform: "translateX(100%)", opacity: 0 },
+                "100%": { transform: "translateX(0)", opacity: 1 },
+              },
+            },
+          }}
+          BackdropProps={{
+            sx: { backgroundColor: "rgba(0,0,0,0.5)", backdropFilter: "blur(4px)" },
+          }}
+        >
+          <DialogTitle sx={{ fontWeight: 900, fontSize: "1.3rem", color: "var(--text-dark)" }}>
+            Sign in to Continue
+          </DialogTitle>
+          <DialogContent sx={{ pt: 2 }}>
+            <Typography sx={{ color: "var(--text-muted)", fontSize: "0.9rem", mb: 2 }}>
+              Please sign in to access subscription plans and submit your request.
+            </Typography>
+            <Box sx={{ display: "grid", gap: 2 }}>
+              <TextField
+                fullWidth
+                label="Email"
+                type="email"
+                value={loginForm.email}
+                onChange={(e) => setLoginForm((p) => ({ ...p, email: e.target.value }))}
+                placeholder="your@email.com"
+                InputProps={{
+                  startAdornment: <InputAdornment position="start"><Mail size={18} color={PRIMARY} /></InputAdornment>,
+                }}
+              />
+              <TextField
+                fullWidth
+                label="Password"
+                type={showPassword ? "text" : "password"}
+                value={loginForm.password}
+                onChange={(e) => setLoginForm((p) => ({ ...p, password: e.target.value }))}
+                placeholder="Enter password"
+                InputProps={{
+                  startAdornment: <InputAdornment position="start"><Lock size={18} color={PRIMARY} /></InputAdornment>,
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton onClick={() => setShowPassword(!showPassword)} edge="end" size="small">
+                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <Typography sx={{ fontSize: "0.85rem", color: "var(--text-muted)", textAlign: "center" }}>
+                Demo: Use any email with password <b>demo123</b>
+              </Typography>
+            </Box>
+          </DialogContent>
+          <DialogActions sx={{ px: 3, pb: 2, gap: 1 }}>
+            <Button
+              onClick={() => {
+                setLoginModalOpen(false);
+                setLoginForm({ email: "", password: "" });
+              }}
+              sx={{ textTransform: "none", fontWeight: 800, color: "var(--text-dark)" }}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              onClick={handleLoginSubmit}
+              sx={{
+                textTransform: "none",
+                fontWeight: 900,
+                backgroundColor: PRIMARY,
+                color: "#fff",
+                boxShadow: "none",
+                "&:hover": { backgroundColor: "#49b2b1", boxShadow: "none" },
+              }}
+            >
+              Sign In
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Box>
     </PageLayout>
   );
 }
-
